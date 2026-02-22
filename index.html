@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ZeZo Wingo Pro · Live</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --header-teal-top: #1FC6B0;
+            --header-teal-mid: #19BFA7;
+            --header-teal-bot: #0FA79A;
+            --card-navy: #224B7A;
+            --main-bg: #0B1E3D;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--main-bg);
+            color: #FFFFFF;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(31, 198, 176, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(34, 75, 122, 0.3) 0%, transparent 40%);
+        }
+
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-section {
+            background: linear-gradient(180deg, var(--header-teal-top) 0%, var(--header-teal-mid) 50%, var(--header-teal-bot) 100%);
+            width: 100%;
+            padding: 30px 20px 30px 20px;
+            border-bottom-left-radius: 45px;
+            border-bottom-right-radius: 45px;
+            text-align: center;
+            box-shadow: 0 10px 0px rgba(15, 167, 154, 0.3), 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(31,198,176,0.5);
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            animation: headerGlow 3s infinite alternate;
+        }
+
+        @keyframes headerGlow {
+            from { box-shadow: 0 10px 0px rgba(15, 167, 154, 0.3), 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(31,198,176,0.3); }
+            to { box-shadow: 0 10px 0px rgba(15, 167, 154, 0.5), 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(31,198,176,0.7); }
+        }
+
+        .header-section::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            animation: shine 5s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .official-badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            padding: 4px 15px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+            animation: badgePulse 2s infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .main-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 2px 4px 6px rgba(0,0,0,0.3), 0 0 15px rgba(255,255,255,0.3);
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 16px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        #homeScreen, #passwordCard, #apiView {
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #passwordCard, #apiView {
+            display: none;
+        }
+
+        .game-card, .password-card, .api-container {
+            background: rgba(34, 75, 122, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 35px;
+            padding: 30px 20px;
+            width: 100%;
+            max-width: 370px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255,255,255,0.1), 0 0 0 1px rgba(31,198,176,0.3);
+            border: 1.5px solid rgba(31, 198, 176, 0.4);
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .game-card:hover, .password-card:hover, .api-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(31,198,176,0.5);
+        }
+
+        .official-name-tag {
+            color: var(--header-teal-top);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+
+        .game-subtitle {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 30px;
+            background: linear-gradient(to bottom, #fff, var(--header-teal-top));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--header-teal-top), var(--header-teal-bot));
+            color: var(--main-bg);
+            font-weight: 800;
+            width: 100%;
+            padding: 18px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 0px #097a70, 0 15px 30px rgba(31, 198, 176, 0.4);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            top: 0;
+            animation: btnPulse 2s infinite;
+        }
+
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 8px 0px #097a70, 0 15px 30px rgba(31, 198, 176, 0.4); }
+            50% { box-shadow: 0 8px 0px #097a70, 0 20px 40px rgba(31, 198, 176, 0.7); }
+        }
+
+        .primary-btn:active {
+            top: 4px;
+            box-shadow: 0 4px 0px #097a70, 0 8px 15px rgba(31, 198, 176, 0.4);
+            transform: translateY(2px);
+        }
+
+        .download-btn {
+            background: transparent;
+            border: 2px solid var(--header-teal-top);
+            color: var(--header-teal-top);
+            font-weight: 800;
+            width: 100%;
+            padding: 16px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-btn:hover {
+            background: var(--header-teal-top);
+            color: var(--main-bg);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(31,198,176,0.6);
+        }
+
+        .pass-input {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid var(--header-teal-top);
+            border-radius: 15px;
+            padding: 15px;
+            width: 100%;
+            color: white;
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .pass-input:focus {
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255,215,0,0.5);
+        }
+
+        .requirement-container {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            border: 1px dashed rgba(31, 198, 176, 0.4);
+            text-align: right;
+            direction: rtl;
+            box-shadow: inset 0 0 10px rgba(31,198,176,0.1);
+        }
+
+        .req-text {
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: #e0e0e0;
+        }
+
+        .req-highlight {
+            color: var(--header-teal-top);
+            font-weight: 800;
+            display: block;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            text-shadow: 0 0 8px rgba(31,198,176,0.5);
+        }
+
+        .youtube-section {
+            width: 100%;
+            max-width: 370px;
+            margin: 20px auto 30px auto;
+            background: rgba(34, 75, 122, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 22px 18px;
+            border: 1.5px solid rgba(31, 198, 176, 0.3);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 30px rgba(31,198,176,0.2);
+        }
+
+        .youtube-heading {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 18px;
+            padding-left: 8px;
+            border-left: 5px solid var(--header-teal-top);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(31,198,176,0.5);
+        }
+
+        .thumbnail-item {
+            display: flex;
+            flex-direction: column;
+            background: rgba(0,0,0,0.25);
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.15s ease, box-shadow 0.15s;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .thumbnail-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 20px rgba(31,198,176,0.3);
+        }
+
+        .video-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .video-title::before {
+            content: "📺";
+            font-size: 1rem;
+            filter: drop-shadow(0 2px 2px black);
+        }
+
+        .thumbnail-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(145deg, #2a4b76, #102b44);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 2px solid rgba(31, 198, 176, 0.3);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 6px 0 #0d4057;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .play-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(31, 198, 176, 0.85);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0B1E3D;
+            box-shadow: 0 6px 0 #097a70, 0 10px 20px rgba(0,0,0,0.4);
+            border: 2px solid white;
+        }
+
+        .duration-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: white;
+            border: 1px solid var(--header-teal-top);
+        }
+
+        .info-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 6px solid var(--header-teal-top);
+            border-radius: 20px;
+            padding: 18px 15px;
+            margin-top: 10px;
+            text-align: left;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(31,198,176,0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .info-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-shadow: 0 0 8px rgba(255,215,0,0.5);
+        }
+
+        .info-title span {
+            font-size: 1.3rem;
+        }
+
+        .info-message {
+            font-size: 0.85rem;
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+
+        .info-highlight {
+            color: var(--header-teal-top);
+            font-weight: 600;
+        }
+
+        .timer-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 4px solid rgba(31, 198, 176, 0.2);
+            border-top-color: var(--header-teal-top);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px auto;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: rgba(0,0,0,0.2);
+            animation: spin 2s linear infinite;
+            box-shadow: 0 0 20px rgba(31,198,176,0.3);
+        }
+        @keyframes spin { 100% { border-top-color: #0FA79A; } }
+
+        .result-display {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #fff, var(--header-teal-top));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+            filter: drop-shadow(0 0 10px rgba(31,198,176,0.5));
+        }
+        table { width: 100%; margin-top: 15px; font-size: 0.8rem; }
+        th { color: var(--header-teal-top); border-bottom: 1px solid rgba(31,198,176,0.2); padding: 8px; }
+        td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .corner-back-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 8px;
+            cursor: pointer;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .corner-back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .corner-back-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: #FFFFFF;
+        }
+
+        .back-link {
+            margin-top: 15px;
+            color: var(--header-teal-top);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            opacity: 0.7;
+            padding-bottom: 10px;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .social-container {
+            background: rgba(34, 75, 122, 0.95);
+            backdrop-filter: blur(20px);
+            border-top-left-radius: 40px;
+            border-top-right-radius: 40px;
+            padding: 15px 10px 30px 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center; 
+            border-top: 1.5px solid rgba(31, 198, 176, 0.4);
+            width: 100%;
+            box-shadow: 0 -10px 35px rgba(0,0,0,0.4), 0 0 30px rgba(31,198,176,0.2);
+            flex-shrink: 0;
+        }
+
+        .social-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            width: 18%;
+            transition: transform 0.2s;
+        }
+
+        .social-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon-box {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 0px rgba(0,0,0,0.3);
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .social-item:hover .icon-box {
+            border-color: var(--header-teal-top);
+            box-shadow: 0 4px 0px rgba(0,0,0,0.3), 0 0 15px rgba(31,198,176,0.5);
+        }
+
+        .icon-box svg {
+            fill: var(--header-teal-top);
+            width: 22px;
+            height: 22px;
+            transition: fill 0.2s;
+        }
+
+        .play-game-btn .icon-box {
+            width: 65px; 
+            height: 65px;
+            background: linear-gradient(135deg, var(--header-teal-top), var(--header-teal-bot));
+            border: 2px solid rgba(255,255,255,0.4);
+            box-shadow: 0 0 20px rgba(31, 198, 176, 0.6), 0 6px 0px #097a70;
+        }
+
+        .play-game-btn .icon-box svg {
+            fill: var(--main-bg);
+            width: 35px;
+            height: 35px;
+        }
+
+        .social-label {
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .glow-dot {
+            position: absolute;
+            background: var(--header-teal-top);
+            border-radius: 50%;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 1;
+            animation: pulse-dot 4s infinite ease-in-out;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.6); }
+        }
+
+        #errorModal {
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.8); 
+            z-index: 1000; 
+            justify-content: center; 
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+        <header class="header-section">
+            <div class="official-badge">Verified Official Access</div>
+            <h1 class="main-title">ZeZo Wingo Pro Hack</h1>
+        </header>
+
+        <div class="content-area" id="scrollContainer">
+            <!-- HOME SCREEN -->
+            <div id="homeScreen">
+                <div class="game-card">
+                    <span class="official-name-tag">92 Pak Official Hack</span>
+                    <div class="flex justify-center mb-4">
+                        <div class="w-12 h-1 bg-teal-400 rounded-full opacity-40"></div>
+                    </div>
+                    <h2 class="game-subtitle">92 Pak Hack Wingo</h2>
+                    
+                    <!-- DOWNLOAD BUTTON -->
+                    <button id="downloadAppBtn" class="download-btn">📱 Download App</button>
+                    
+                    <button onclick="askForPassword()" class="primary-btn">START PREDICTION</button>
+                    <p class="mt-4 text-[10px] text-teal-400/60 uppercase tracking-widest font-bold">Official Build v2.4</p>
+                </div>
+
+                <!-- DYNAMIC YOUTUBE THUMBNAIL + INFO BOX -->
+                <div class="youtube-section" id="youtubeSection">
+                    <div class="youtube-heading">🎬 LATEST VIDEO</div>
+                    <div class="thumbnail-item" id="youtubeThumbnail">
+                        <span class="video-title" id="videoTitle">Loading...</span>
+                        <div class="thumbnail-placeholder" id="thumbnailContainer">
+                            <span class="play-icon">▶</span>
+                            <span class="duration-badge">12:34</span>
+                        </div>
+                    </div>
+                    <div class="info-box" id="giveawayBox">
+                        <div class="info-title">
+                            <span>🎁</span> <span id="giveawayTitle">DAILY GIVEAWAY</span>
+                        </div>
+                        <div class="info-message" id="giveawayMessage">
+                            Loading...
+                        </div>
+                        <div class="info-message" style="margin-top: 10px; font-size:0.75rem; color: #aad8d1;" id="giveawayFooter">
+                            ⏰ روزانہ رات 8 بجے اپ ڈیٹ ہوتا ہے۔
+                        </div>
+                    </div>
+                    <p class="text-center text-[0.6rem] text-teal-300/70 mt-4 tracking-wider">👇 مزید معلومات کے لیے سکرول کریں</p>
+                </div>
+            </div>
+
+            <!-- PASSWORD CARD -->
+            <div id="passwordCard" class="password-card">
+                <span class="official-name-tag">Security Required</span>
+                <h2 class="game-subtitle" style="font-size: 1.2rem; margin-bottom: 20px;">Enter Password</h2>
+                <input type="password" id="passwordInput" class="pass-input" placeholder="Type Here...">
+                <button onclick="checkPassword()" class="primary-btn">Unlock Now</button>
+                
+                <div class="requirement-container">
+                    <span class="req-highlight">🔐 *ہیک کا پاس ورڈ حاصل کرنے کا طریقہ* 🔐</span>
+                    <div class="req-text" id="requirementText">
+                        👉 ہماری لنک سے نیا اکاؤنٹ بنائیں<br>
+                        👉 اکاؤنٹ میں ڈیپازٹ کریں<br>
+                        👉 ڈیپازٹ کا اسکرین شاٹ ہمارے ساتھ شیئر کریں<br>
+                        <span style="color: var(--header-teal-top); font-weight: 600;">✅ *اس کے بعد آپ کو ہیک کا پاس ورڈ دے دیا جائے گا*</span><br>
+                        <span style="color: #FFD700; font-weight: 600; display: block; margin-top: 8px;">⚠️ *اہم شرط* :</span>
+                        ✔️ *صرف NEW ACCOUNT قابلِ قبول ہے*<br>
+                        ✔️ کم از کم ڈیپازٹ 300 یا اس سے زیادہ ہونا لازمی ہے<br>
+                        <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; opacity: 0.9;">
+                            🚀 *Limited Offer | Serious Users Only* 🚀
+                        </div>
+                    </div>
+                </div>
+
+                <div class="back-link" onclick="backToMain()">Back to Home</div>
+            </div>
+
+            <!-- PREDICTION VIEW -->
+            <div id="apiView" class="api-container">
+                <div class="corner-back-btn" onclick="hidePrediction()">
+                    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                </div>
+
+                <span class="official-name-tag">Live Prediction</span>
+                <div class="text-[0.7rem] text-teal-400 font-bold uppercase tracking-widest">Live Period</div>
+                <div id="period" class="text-xl font-bold">--------</div>
+
+                <div class="timer-circle" id="seconds">--</div>
+
+                <div class="py-4 bg-black/20 rounded-2xl mb-4">
+                    <div class="text-[0.6rem] uppercase font-bold opacity-60">Predicted Result</div>
+                    <div id="prediction" class="result-display">WAITING...</div>
+                </div>
+
+                <div class="overflow-hidden rounded-xl bg-black/10">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history"></tbody>
+                    </table>
+                </div>
+
+                <div class="back-link" onclick="hidePrediction()">Return to Home</div>
+            </div>
+        </div>
+
+        <!-- Social Bar -->
+        <div class="social-container" id="socialBar">
+            <a href="#" class="social-item" id="contactLink" target="_blank" onclick="handleInteraction()">
+                <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.835c1.53.909 3.039 1.389 4.625 1.39 5.25.001 9.522-4.272 9.523-9.523.001-2.546-.994-4.937-2.798-6.742-1.804-1.803-4.195-2.798-6.741-2.799-5.245 0-9.519 4.274-9.521 9.525-.001 1.696.449 3.353 1.303 4.811l-1.01 3.693 3.819-.982z"/></svg></div>
+                <span class="social-label">Contact</span>
+            </a>
+            <a href="#" class="social-item" id="waChannelLink" target="_blank" onclick="handleInteraction()">
+                <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg></div>
+                <span class="social-label">WA Channel</span>
+            </a>
+            <a href="#" class="social-item play-game-btn" id="registerLink" target="_blank" onclick="handleInteraction()">
+                <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></div>
+                <span class="social-label">Register</span>
+            </a>
+            <a href="#" class="social-item" id="ytChannelLink" target="_blank" onclick="handleInteraction()">
+                <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+                <span class="social-label">YT Channel</span>
+            </a>
+            <a href="#" class="social-item" id="fbPageLink" target="_blank" onclick="handleInteraction()">
+                <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+                <span class="social-label">FB Page</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal">
+        <div style="background:var(--card-navy); padding:30px; border-radius:20px; border:1px solid #ff4444; text-align:center; max-width:80%;">
+            <h3 style="color:#ff4444; font-weight:800; margin-bottom:15px;">WRONG PASSWORD</h3>
+            <p style="font-size:0.9rem; opacity:0.8; margin-bottom:20px;">Access denied. Please check your password and try again.</p>
+            <button onclick="document.getElementById('errorModal').style.display='none'" class="primary-btn" style="padding:10px 30px; background:#ff4444; box-shadow:none;">OK</button>
+        </div>
+    </div>
+
+    <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
+    <script>
+        const FIREBASE_URL = "https://zezo-wingo-pro-penal-hack-default-rtdb.firebaseio.com";
+
+        const homeScreen = document.getElementById('homeScreen');
+        const passwordCard = document.getElementById('passwordCard');
+        const apiView = document.getElementById('apiView');
+        const periodEl = document.getElementById("period");
+        const secondsEl = document.getElementById("seconds");
+        const predictionEl = document.getElementById("prediction");
+        const historyBody = document.getElementById("history");
+        const scrollContainer = document.getElementById("scrollContainer");
+        const passwordInput = document.getElementById('passwordInput');
+        const errorModal = document.getElementById('errorModal');
+        const videoTitle = document.getElementById('videoTitle');
+        const thumbnailContainer = document.getElementById('thumbnailContainer');
+        const youtubeThumbnail = document.getElementById('youtubeThumbnail');
+        const giveawayTitle = document.getElementById('giveawayTitle');
+        const giveawayMessage = document.getElementById('giveawayMessage');
+        const giveawayFooter = document.getElementById('giveawayFooter');
+        const downloadBtn = document.getElementById('downloadAppBtn');
+
+        const contactLink = document.getElementById('contactLink');
+        const waChannelLink = document.getElementById('waChannelLink');
+        const registerLink = document.getElementById('registerLink');
+        const ytChannelLink = document.getElementById('ytChannelLink');
+        const fbPageLink = document.getElementById('fbPageLink');
+
+        let APP_PASSWORD = "7474";
+        let appDownloadLink = "#";
+
+        let timerInterval;
+
+        const VISITOR_KEY = 'zezo_visitor_id';
+        let visitorId = localStorage.getItem(VISITOR_KEY);
+        const isNew = !visitorId;
+        if (isNew) {
+            visitorId = 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem(VISITOR_KEY, visitorId);
+        }
+        fetch(`${FIREBASE_URL}/analytics/visits.json`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                visitorId,
+                timestamp: Date.now(),
+                isNew,
+                userAgent: navigator.userAgent
+            })
+        }).catch(err => console.warn("Analytics error:", err));
+
+        function getSize(number) {
+            return (number >= 0 && number <= 4) ? "SMALL" : "BIG";
+        }
+
+        function startTimer(seconds) {
+            clearInterval(timerInterval);
+            secondsEl.innerText = seconds;
+            timerInterval = setInterval(() => {
+                seconds--;
+                if (seconds < 0) seconds = 0;
+                secondsEl.innerText = seconds;
+                if (seconds <= 0) {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
+        async function fetchLiveData() {
+            try {
+                const [timeRes, historyRes] = await Promise.all([
+                    fetch("https://draw.ar-lottery01.com/WinGo/WinGo_30S.json"),
+                    fetch("https://draw.ar-lottery01.com/WinGo/WinGo_30S/GetHistoryIssuePage.json")
+                ]);
+
+                const timeData = await timeRes.json();
+                const historyData = await historyRes.json();
+
+                const currentPeriod = timeData?.current?.issueNumber || "--";
+                const endTime = timeData?.current?.endTime;
+                const now = Date.now();
+                let secondsLeft = 0;
+                if (endTime) {
+                    secondsLeft = Math.floor((endTime - now) / 1000);
+                    if (secondsLeft < 0) secondsLeft = 0;
+                }
+                periodEl.innerText = currentPeriod;
+                startTimer(secondsLeft);
+
+                const historyList = historyData?.data?.list || [];
+                const last10 = historyList.slice(0, 10);
+
+                if (last10.length > 0) {
+                    const latest = last10[0];
+                    const num = parseInt(latest.number);
+                    predictionEl.innerText = getSize(num);
+                } else {
+                    predictionEl.innerText = "WAITING...";
+                }
+
+                historyBody.innerHTML = "";
+                last10.forEach(item => {
+                    const num = parseInt(item.number);
+                    const size = getSize(num);
+                    const color = size === 'BIG' ? 'text-teal-400' : 'text-yellow-400';
+                    historyBody.innerHTML += `
+                        <tr>
+                            <td>${item.issueNumber}</td>
+                            <td class="font-bold ${color}">${size}</td>
+                        </tr>
+                    `;
+                });
+
+            } catch (error) {
+                console.error("API fetch error:", error);
+                predictionEl.innerText = "ERROR";
+            }
+        }
+
+        async function loadConfig() {
+            try {
+                const resp = await fetch(`${FIREBASE_URL}/config.json`);
+                const config = await resp.json();
+                if (!config) return;
+
+                if (config.appPassword) APP_PASSWORD = config.appPassword;
+                if (config.appDownloadLink) appDownloadLink = config.appDownloadLink;
+
+                if (config.whatsappNumber) contactLink.href = `https://wa.me/${config.whatsappNumber}`;
+                if (config.whatsappChannelLink) waChannelLink.href = config.whatsappChannelLink;
+                if (config.registerGameLink) registerLink.href = config.registerGameLink;
+                if (config.youtubeChannelLink) ytChannelLink.href = config.youtubeChannelLink;
+                if (config.facebookPageLink) fbPageLink.href = config.facebookPageLink;
+
+                if (config.youtubeVideoTitle) videoTitle.innerText = config.youtubeVideoTitle;
+                if (config.youtubeVideoUrl) youtubeThumbnail.onclick = () => { window.open(config.youtubeVideoUrl, '_blank'); };
+                if (config.youtubeThumbnailUrl) {
+                    thumbnailContainer.style.backgroundImage = `url('${config.youtubeThumbnailUrl}')`;
+                }
+
+                if (config.dailyGiveawayTitle) giveawayTitle.innerText = config.dailyGiveawayTitle;
+                if (config.dailyGiveawayMessage) giveawayMessage.innerHTML = config.dailyGiveawayMessage.replace(/\n/g, '<br>');
+                if (config.dailyGiveawayFooter) giveawayFooter.innerText = config.dailyGiveawayFooter;
+
+            } catch (e) {
+                console.warn("Failed to load config from Firebase", e);
+            }
+        }
+
+        function downloadApp() {
+            if (appDownloadLink && appDownloadLink !== "#") {
+                window.open(appDownloadLink, '_blank');
+            } else {
+                alert("Download link not set yet.");
+            }
+        }
+
+        function askForPassword() {
+            handleInteraction();
+            homeScreen.style.display = 'none';
+            passwordCard.style.display = 'block';
+            apiView.style.display = 'none';
+            scrollContainer.scrollTop = 0;
+        }
+
+        function backToMain() {
+            handleInteraction();
+            homeScreen.style.display = 'block';
+            passwordCard.style.display = 'none';
+            apiView.style.display = 'none';
+            scrollContainer.scrollTop = 0;
+        }
+
+        function checkPassword() {
+            const input = passwordInput.value;
+            if (input === APP_PASSWORD) {
+                handleInteraction();
+                passwordCard.style.display = 'none';
+                apiView.style.display = 'block';
+                homeScreen.style.display = 'none';
+                scrollContainer.scrollTop = 0;
+                fetchLiveData();
+                if (window.liveInterval) clearInterval(window.liveInterval);
+                window.liveInterval = setInterval(fetchLiveData, 2000);
+            } else {
+                handleInteraction();
+                errorModal.style.display = 'flex';
+                passwordInput.value = '';
+            }
+        }
+
+        function hidePrediction() {
+            handleInteraction();
+            apiView.style.display = 'none';
+            homeScreen.style.display = 'block';
+            passwordCard.style.display = 'none';
+            if (window.liveInterval) {
+                clearInterval(window.liveInterval);
+                window.liveInterval = null;
+            }
+            scrollContainer.scrollTop = 0;
+        }
+
+        function handleInteraction() {
+            const sound = document.getElementById('clickSound');
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(() => {});
+            }
+            if ('vibrate' in navigator) { 
+                navigator.vibrate(40); 
+            }
+        }
+
+        function createGlowDots() {
+            const dotCount = 40; 
+            for (let i = 0; i < dotCount; i++) {
+                let dot = document.createElement('div');
+                dot.className = 'glow-dot';
+                let size = Math.random() * 3 + 1;
+                dot.style.width = size + 'px';
+                dot.style.height = size + 'px';
+                dot.style.top = Math.random() * 100 + 'vh';
+                dot.style.left = Math.random() * 100 + 'vw';
+                dot.style.animationDelay = (Math.random() * 5) + 's';
+                document.body.appendChild(dot);
+            }
+        }
+
+        window.onload = () => {
+            createGlowDots();
+            loadConfig();
+            homeScreen.style.display = 'block';
+            passwordCard.style.display = 'none';
+            apiView.style.display = 'none';
+        };
+    </script>
+</body>
+</html>
